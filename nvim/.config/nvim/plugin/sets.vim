@@ -11,11 +11,14 @@ set number
 set relativenumber
 set scrolloff=8
 set shiftround    " round indent to multiple of 'shiftwidth'
-set shiftwidth=4  " operation >> indents 4 columns; << unindents 4 columns
+set shiftwidth=2  " operation >> indents 4 columns; << unindents 4 columns
 set showcmd       " show last command entered in the bottom bar
-set softtabstop=4 " insert/delete 4 spaces when hitting a TAB/BACKSPACE
+set softtabstop=2 " insert/delete 4 spaces when hitting a TAB/BACKSPACE
 set splitright
-set tabstop=4     " a hard TAB displays as 4 columns
+set tabstop=2     " a hard TAB displays as 4 columns
 " set termguicolors
-set textwidth=79  " lines longer than 79 columns will be broken
+" set textwidth=88  " lines longer than 79 columns will be broken, let prettier decide this
 set termguicolors
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=50
