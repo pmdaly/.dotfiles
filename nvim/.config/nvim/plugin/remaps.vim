@@ -4,16 +4,23 @@ let mapleader = " "
 inoremap jj <Esc>
 nnoremap ; :
 
+" long wrapped lines
+nnoremap k gk
+nnoremap j gj
+
 " nerdtree
 nnoremap <C-n> :NERDTreeToggle<CR>
 
 " fzf / telescope
-"nmap <C-f> :Files<CR>
-nmap <C-f> :lua require('telescope.builtin').find_files()<CR>
-"nmap <C-p> :GFiles<CR>
-nmap <C-p> :lua require('telescope.builtin').git_files()<CR>
-" nmap <C-g> :Rg<CR>
-nmap <C-g> :lua require('telescope.builtin').live_grep()<CR>
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>fp <cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <leader>gg <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+nnoremap <leader>fd <cmd>lua require('telescope.builtin').git_files({
+      \ prompt_title = "< VimRC >",
+      \ cwd = "~/.dotfiles",
+      \ hidden = true})<cr>
 
 " better vim split movement
 nnoremap <C-J> <C-W><C-J>

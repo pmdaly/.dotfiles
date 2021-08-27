@@ -1,5 +1,3 @@
-local actions = require('telescope.actions')
-
 require('telescope').setup {
     defaults = {
         file_sorter = require('telescope.sorters').get_fzy_sorter,
@@ -21,3 +19,4 @@ require('telescope').setup {
 }
 
 require('telescope').load_extension('fzy_native')
+
