@@ -22,3 +22,5 @@ set termguicolors
 " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
 " delays and poor user experience.
 set updatetime=50
+
+autocmd filetype python, solidity setlocal ts=4 sts=4 sw=4

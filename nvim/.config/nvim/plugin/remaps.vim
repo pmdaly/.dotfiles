@@ -28,23 +28,26 @@ nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
-" floatterm
-nnoremap <C-t> :call FloatTerm()<CR>
-
 " coc completion
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
 inoremap <silent><expr> <TAB>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
 
 " maximizer
-
+nnoremap <leader>m :MaximizerToggle!<CR>
 
 "vimspector
 fun! GotoWindow(id)
@@ -53,7 +56,6 @@ fun! GotoWindow(id)
 endfun
 
 " vimspector Debugger remaps
-nnoremap <leader>m :MaximizerToggle!<CR>
 nnoremap <leader>dd :call vimspector#Launch()<CR>
 nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
 nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
