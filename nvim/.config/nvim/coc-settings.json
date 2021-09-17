@@ -1,3 +1,4 @@
 {
-    "python.venvPath": "~/Library/Caches/pypoetry/virtualenvs/"
+  "python.venvPath": "~/Library/Caches/pypoetry/virtualenvs/",
+  "diagnostic.displayByAle": true
 }
