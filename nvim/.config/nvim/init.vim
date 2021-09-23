@@ -33,6 +33,15 @@ Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+" nvim lsp
+Plug 'hrsh7th/cmp-buffer' " 
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
+Plug 'neovim/nvim-lspconfig'
+"Plug 'glepnir/lspsaga.nvim'
+" remember to update this after glepnir fixes it
+Plug 'jasonrhansen/lspsaga.nvim', {'branch': 'finder-preview-fixes'}
+"
 " Initialize plugin system
 call plug#end()
 
@@ -41,7 +50,7 @@ let g:gruvbox_flat_style="dark"
 let g:airline_theme = 'bubblegum'
 
 " treeshitter
-lua require'nvim-treesitter.configs'.setup { highlight = { enable = true } }
+lua require'nvim-treesitter.configs'.setup { indent = { enable = true }, highlight = { enable = true }, incremental_selection = { enable = true } }
 
 " USE THESE FOR LSP! error: '✘', warning: '⚠'
 

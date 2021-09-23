@@ -3,8 +3,10 @@ set fish_key_bindings fish_user_key_bindings
 
 # No greeting
 set -g fish_greeting
-
 set -g fish_user_paths "/usr/local/opt/ruby/bin" $fish_user_paths
+set NPM_PACKAGES "$HOME/.npm-packages"
+set PATH $PATH $NPM_PACKAGES/bin
+set MANPATH $NPM_PACKAGES/share/man $MANPATH
 
 # Source Autojump
 [ -f /usr/local/share/autojump/autojump.fish ]; and source /usr/local/share/autojump/autojump.fish
