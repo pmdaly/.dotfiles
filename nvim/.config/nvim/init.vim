@@ -38,10 +38,13 @@ Plug 'hrsh7th/cmp-buffer' "
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'neovim/nvim-lspconfig'
+" not sure if I want snippets
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
 "Plug 'glepnir/lspsaga.nvim'
 " remember to update this after glepnir fixes it
 Plug 'jasonrhansen/lspsaga.nvim', {'branch': 'finder-preview-fixes'}
-"
+
 " Initialize plugin system
 call plug#end()
 

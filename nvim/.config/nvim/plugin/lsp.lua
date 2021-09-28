@@ -41,6 +41,12 @@ lsp.vimls.setup{}
 -- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
+    snippet = {
+      expand = function(args)
+        -- For `vsnip` user.
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+      end,
+  },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
     ['<C-n>'] = cmp.mapping.select_next_item(),
