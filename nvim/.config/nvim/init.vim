@@ -36,14 +36,11 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " nvim lsp
 Plug 'hrsh7th/cmp-buffer' " 
 Plug 'hrsh7th/cmp-nvim-lsp'
-Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/nvim-cmp', {'branch': 'main'} " dunno if needed for all where the error occurs
 Plug 'neovim/nvim-lspconfig'
 " not sure if I want snippets
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
-"Plug 'glepnir/lspsaga.nvim'
-" remember to update this after glepnir fixes it
-Plug 'jasonrhansen/lspsaga.nvim', {'branch': 'finder-preview-fixes'}
 
 " Initialize plugin system
 call plug#end()
@@ -60,4 +57,3 @@ lua require'nvim-treesitter.configs'.setup { indent = { enable = true }, highlig
 " close nerdtree if it's the last tab
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
-

@@ -1,1 +1,3 @@
 .DS_STORE
+.npm-packages
+.node_modules

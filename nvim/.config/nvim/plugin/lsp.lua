@@ -1,20 +1,5 @@
--- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
-
--- lsp saga
-local saga = require('lspsaga')
-saga.init_lsp_saga {
-  error_sign = '✘',
-  warn_sign = '⚠',
-  hint_sign = '⚠',
-  infor_sign = '⚠',
-  border_style = "round",
-  max_preview_lines = 20
-}
-
 -- Language servers to use
-local lsp = require('lspconfig')
-
+local lsp = require'lspconfig'
 lsp.bashls.setup{}
 lsp.cmake.setup{}
 lsp.html.setup{}
@@ -39,13 +24,18 @@ lsp.yamlls.setup{}
 lsp.vimls.setup{}
 
 -- nvim-cmp setup
+vim.o.completeopt = 'menu,menuone,noinsert,noselect,preview'
+  --completion = {
+   -- completeopt = "menu,menuone,noinsert,noselect",
+  --},
+
 local cmp = require 'cmp'
 cmp.setup {
-    snippet = {
-      expand = function(args)
-        -- For `vsnip` user.
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
-      end,
+  snippet = {
+    expand = function(args)
+      -- For `vsnip` user.
+      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` user.
+    end,
   },
   mapping = {
     ['<C-p>'] = cmp.mapping.select_prev_item(),
@@ -59,15 +49,15 @@ cmp.setup {
       select = true,
     },
     ['<Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-n>', true, true, true), 'n')
+      if cmp.visible() then
+        cmp.select_next_item()
       else
         fallback()
       end
     end,
     ['<S-Tab>'] = function(fallback)
-      if vim.fn.pumvisible() == 1 then
-        vim.fn.feedkeys(vim.api.nvim_replace_termcodes('<C-p>', true, true, true), 'n')
+      if cmp.visible() then
+        cmp.select_prev_item()
       else
         fallback()
       end
@@ -75,6 +65,7 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'buffer' }
+    { name = 'buffer' },
+    { name = 'vsnip' }
   },
 }
