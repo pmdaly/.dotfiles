@@ -34,13 +34,16 @@ Plug 'nvim-telescope/telescope.nvim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " nvim lsp
-Plug 'hrsh7th/cmp-buffer' " 
-Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp', {'branch': 'main'} " dunno if needed for all where the error occurs
+Plug 'hrsh7th/cmp-buffer' " 
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-nvim-lua'
+Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'neovim/nvim-lspconfig'
-" not sure if I want snippets
+Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'tjdevries/colorbuddy.nvim'
 
 " Initialize plugin system
 call plug#end()

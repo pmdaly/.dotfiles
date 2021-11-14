@@ -1,5 +1,9 @@
 -- Language servers to use
+local lspkind = require "lspkind"
+lspkind.init()
+
 local lsp = require'lspconfig'
+
 lsp.bashls.setup{}
 lsp.cmake.setup{}
 lsp.html.setup{}
@@ -64,8 +68,26 @@ cmp.setup {
     end,
   },
   sources = {
+    { name = "vsnip" },
+    { name = "nvim_lua" },
     { name = 'nvim_lsp' },
-    { name = 'buffer' },
-    { name = 'vsnip' }
+    { name = 'path' },
+    { name = 'buffer', keyword_length = 5 },
   },
+  formatting = {
+    format = lspkind.cmp_format {
+      with_text = true,
+      menu = {
+        buffer = "[buf]",
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[api]",
+        path = "[path]",
+        vsnip = "[snip]",
+      },
+    },
+  },
+  experimental = {
+    native_menu = false,
+    ghost_text = true
+  }
 }
