@@ -16,10 +16,12 @@ Plug 'ggandor/lightspeed.nvim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'scrooloose/nerdtree'
 Plug 'szw/vim-maximizer'
-Plug 'tomlion/vim-solidity'
+Plug 'TovarishFin/vim-solidity'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'dense-analysis/ale'
 
 " gruvbuddies
 Plug 'eddyekofo94/gruvbox-flat.nvim'
@@ -40,10 +42,10 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-nvim-lua'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'neovim/nvim-lspconfig'
+Plug 'williamboman/nvim-lsp-installer'
 Plug 'onsails/lspkind-nvim'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
-Plug 'tjdevries/colorbuddy.nvim'
 
 " Initialize plugin system
 call plug#end()
@@ -60,3 +62,9 @@ lua require'nvim-treesitter.configs'.setup { indent = { enable = true }, highlig
 " close nerdtree if it's the last tab
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree")
       \ && b:NERDTree.isTabTree()) | q | endif
+
+" fixing solidity filetype
+" au BufNewFile,BufRead *.sol setfiletype solidity
+
+" Ale
+let g:ale_linters = {'solidity': ['solhint']}

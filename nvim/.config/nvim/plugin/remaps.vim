@@ -4,6 +4,13 @@ let mapleader = " "
 inoremap jj <Esc>
 nnoremap ; :
 
+" yank em
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+
+" fix that Y
+nnoremap Y yg$
+
 " long wrapped lines
 nnoremap k gk
 nnoremap j gj
@@ -43,3 +50,6 @@ nnoremap <leader>m :MaximizerToggle!<CR>
 nnoremap <leader>gs :G<CR>
 nnoremap <leader>gd :G diff %<CR>
 nnoremap <leader>gc :G commit<CR>
+
+" debuggin
+
