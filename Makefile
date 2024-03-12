@@ -11,6 +11,7 @@ configs=\
 
 pkgs=\
      ranger\
+	 jq
 
 
 update:
@@ -30,7 +31,7 @@ install:
 
 	# link configs
 	@for folder in $(configs); do \
-		stow "$$folder"; \
+		stow -R "$$folder"; \
 	done
 
 
