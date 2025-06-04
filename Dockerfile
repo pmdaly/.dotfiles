@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy all files from your repository to the container
-COPY . /app
+COPY . .
 
 # Run 'make install' to test the installation
 RUN make install
