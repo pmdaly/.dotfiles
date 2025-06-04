@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-for folder in $(echo */)
-do
-    echo "Adding link to $folder"
-    stow $folder
-done

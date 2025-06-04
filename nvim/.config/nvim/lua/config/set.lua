@@ -23,3 +23,10 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.g.mapleader = " "
+
+vim.g.python3_host_prog = "/usr/bin/python3"
+
+-- .j2 is a jenkinsfile
+vim.filetype.add({ extension = {j2 = 'groovy'}})
+
+vim.o.splitright = true
