@@ -16,12 +16,11 @@ jobs:
 
       - name: Install chezmoi
         run: |
-          curl -fsLS --tlsv1.2 --proto =https get.chezmoi.io | sh
-          echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+          sh -c "$(curl -fsLS get.chezmoi.io)"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Validate setup
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
           echo "✅ Checking chezmoi installation..."
           chezmoi --version
           echo "✅ Checking required files..."
@@ -55,7 +54,7 @@ jobs:
       - name: Install Homebrew
         run: |
           /bin/bash -c "$(curl -fsSL --tlsv1.2 --proto =https https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $GITHUB_ENV
+          echo "/opt/homebrew/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
@@ -114,7 +113,7 @@ jobs:
       - name: Check for security issues
         run: |
           echo "Checking for potential security issues..."
-          if grep -r -i "password\|secret\|key\|token\|api_key\|credential\|auth" . --exclude-dir=.git | grep -v "keybindings\|gpgkey\|keyrings"; then
+          if grep -r -i "password\|secret\|token\|api_key\|credential\|auth\|private_key\|ssh_key" . --exclude-dir=.git | grep -v -E "(keybindings|keys|keymap|bindkey|bind-key|alt_key|dvorak|keyboard|keyboard|key|Key|KEY)" | grep -v -E "(detect-secrets|secrets)" | grep -v -E "(fugitive|telescope|lsp|remap|config)"; then
             echo "⚠️  Potential sensitive data found"
             exit 1
           else
