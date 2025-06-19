@@ -1,0 +1,77 @@
+# {{ .name }}'s Dotfiles
+
+Managed with [chezmoi](https://www.chezmoi.io/).
+
+## Quick Start
+
+### Install chezmoi and dotfiles
+
+```bash
+# Install chezmoi
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply {{ .repo }}
+
+# Or if you have chezmoi installed
+chezmoi init --apply {{ .repo }}
+```
+
+### Manual installation
+
+```bash
+# Install chezmoi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    brew install chezmoi
+else
+    sh -c "$(curl -fsLS get.chezmoi.io)"
+fi
+
+# Initialize dotfiles
+chezmoi init {{ .repo }}
+chezmoi apply
+```
+
+## What's included
+
+- **Shell**: Zsh with cross-platform optimizations
+- **Editor**: Neovim with LSP, autocompletion, and modern plugins
+- **Terminal**: Kitty terminal emulator
+- **File Manager**: Ranger
+- **Terminal Multiplexer**: Tmux
+
+## Management
+
+```bash
+# Apply changes
+chezmoi apply
+
+# Edit a file
+chezmoi edit ~/.zshrc
+
+# See what would change
+chezmoi diff
+
+# Update from source
+chezmoi update
+
+# Remove dotfiles
+chezmoi unapply
+```
+
+## Customization
+
+Edit `chezmoi.toml` to customize:
+- User information
+- OS-specific settings
+- Application versions
+
+## Cross-platform support
+
+This setup automatically detects your OS and applies appropriate configurations:
+- **macOS**: Uses Homebrew, macOS-specific paths
+- **Linux**: Uses apt, Linux-specific paths
+
+## Dependencies
+
+The installation script will automatically install:
+- **System packages**: stow, jq, ranger
+- **Applications**: kitty, neovim, node.js
+- **Python packages**: pynvim (for Neovim integration) 

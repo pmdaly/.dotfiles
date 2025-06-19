@@ -1,5 +1,4 @@
-.PHONY: install uninstall test
-
+.PHONY: install uninstall test help
 
 configs=\
 	kitty\
@@ -8,16 +7,26 @@ configs=\
 	tmux\
 	zsh
 
-
 pkgs=\
      ranger\
 	 jq
 
+# Help target
+help:
+	@echo "Available commands:"
+	@echo "  install       - Install dotfiles using stow (legacy)"
+	@echo "  uninstall     - Uninstall dotfiles using stow (legacy)"
+	@echo "  update        - Update system packages"
+	@echo "  test          - Run local tests"
+	@echo ""
+	@echo "Note: Comprehensive testing is done via GitHub Actions"
+	@echo "  - Real Linux environment testing"
+	@echo "  - Real macOS environment testing"
+	@echo "  - Automatic testing on push/PR"
 
 update:
 	sudo apt update
 	sudo apt install ${pkgs}
-
 
 install:
 	# kitty
@@ -34,7 +43,6 @@ install:
 		stow -R "$$folder"; \
 	done
 
-
 uninstall:
 	# neovim
 	# unlink configs
@@ -42,13 +50,18 @@ uninstall:
 		stow -D "$$folder"; \
 	done
 
-
-# test building in ubuntu / mac docker
+# Local testing
 test:
-	@which docker || { echo "docker is not installed!"; exit 1; }
-	sudo docker build --no-cache -t dotfiles-test -f Dockerfile .
-	sudo docker run -it dotfiles-test
-
+	@echo "Running local tests..."
+	@echo "Note: For comprehensive testing, push to GitHub to trigger Actions"
+	@echo "✅ Checking chezmoi installation..."
+	@chezmoi --version
+	@echo "✅ Checking required files..."
+	@[[ -f "migrate-to-chezmoi.sh" ]] || (echo "❌ migrate-to-chezmoi.sh not found" && exit 1)
+	@[[ -f "run_once_install-dotfiles.sh.tmpl" ]] || (echo "❌ run_once_install-dotfiles.sh.tmpl not found" && exit 1)
+	@[[ -d "chezmoi-source" ]] || (echo "❌ chezmoi-source directory not found" && exit 1)
+	@[[ -f "chezmoi.toml" ]] || (echo "❌ chezmoi.toml not found" && exit 1)
+	@echo "✅ Local tests completed"
 
 # installations
 define install_kitty
@@ -62,7 +75,6 @@ define install_kitty
 	fi
 endef
 
-
 define install_node
 	@if ! which node >/dev/null 2>&1; then \
 		sudo apt-get install -y ca-certificates curl gnupg; \
@@ -74,7 +86,6 @@ define install_node
 		sudo apt-get install nodejs -y; \
 	fi
 endef
-
 
 define install_neovim
 	@if ! which nvim >/dev/null 2>&1; then \

@@ -1,0 +1,22 @@
+# Chezmoi configuration
+[data]
+    # User information
+    name = "{{ .chezmoi.username }}"
+    email = "{{ .chezmoi.username }}@example.com"
+    
+    # OS detection
+    os = "{{ .chezmoi.os }}"
+    arch = "{{ .chezmoi.arch }}"
+    
+    # Package managers
+    packageManager = "{{ if eq .chezmoi.os \"darwin\" }}brew{{ else }}apt{{ end }}"
+    
+    # Application versions
+    neovimVersion = "latest"
+    nodeVersion = "20"
+    
+    # Colors for output
+    colors = true
+    
+    # Dotfiles repository
+    repo = "{{ .chezmoi.sourceDir }}" 

@@ -1,0 +1,126 @@
+name: Test Chezmoi Setup
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl git zsh stow jq ranger python3 python3-pip nodejs npm ca-certificates gnupg lsb-release
+
+      - name: Install chezmoi
+        run: |
+          curl -fsLS --tlsv1.2 --proto =https get.chezmoi.io | sh
+          echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+
+      - name: Validate setup
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          echo "✅ Checking chezmoi installation..."
+          chezmoi --version
+          echo "✅ Checking required files..."
+          [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
+          [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
+          [[ -d "chezmoi-source" ]] || exit 1
+          [[ -f "chezmoi.toml" ]] || exit 1
+
+      - name: Test migration script
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          bash -n migrate-to-chezmoi.sh
+          bash migrate-to-chezmoi.sh
+
+      - name: Test chezmoi apply
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi apply --dry-run
+
+      - name: Verify configuration
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          chezmoi verify
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Homebrew
+        run: |
+          /bin/bash -c "$(curl -fsSL --tlsv1.2 --proto =https https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+          echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> $GITHUB_ENV
+
+      - name: Install dependencies
+        run: |
+          brew install stow jq ranger python node
+
+      - name: Install chezmoi
+        run: |
+          brew install chezmoi
+
+      - name: Validate setup
+        run: |
+          echo "✅ Checking chezmoi installation..."
+          chezmoi --version
+          echo "✅ Checking required files..."
+          [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
+          [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
+          [[ -d "chezmoi-source" ]] || exit 1
+          [[ -f "chezmoi.toml" ]] || exit 1
+
+      - name: Test migration script on macOS
+        run: |
+          bash -n migrate-to-chezmoi.sh
+          bash migrate-to-chezmoi.sh
+
+      - name: Test chezmoi apply on macOS
+        run: |
+          chezmoi apply --dry-run
+
+      - name: Verify configuration on macOS
+        run: |
+          chezmoi verify
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check shell script syntax
+        run: |
+          bash -n migrate-to-chezmoi.sh
+          bash -n run_once_install-dotfiles.sh.tmpl
+
+      - name: Check for template syntax
+        run: |
+          template_files=$(find chezmoi-source -name "*.tmpl")
+          for file in $template_files; do
+            echo "Checking $file..."
+            if grep -q "{{.*}}" "$file"; then
+              echo "✅ $file contains templates"
+            else
+              echo "⚠️  $file has no templates"
+            fi
+          done
+
+      - name: Check for security issues
+        run: |
+          echo "Checking for potential security issues..."
+          if grep -r -i "password\|secret\|key\|token\|api_key\|credential\|auth" . --exclude-dir=.git | grep -v "keybindings\|gpgkey\|keyrings"; then
+            echo "⚠️  Potential sensitive data found"
+            exit 1
+          else
+            echo "✅ No obvious sensitive data found"
+          fi 
