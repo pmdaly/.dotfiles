@@ -47,7 +47,14 @@ fi
 # Install system packages
 echo -e "${YELLOW}📦 Installing system packages...${NC}"
 if [[ "$OS" == "macos" ]]; then
-    brew install stow jq ranger
+    # Check and install packages only if not already installed
+    for pkg in stow jq ranger; do
+        if ! brew list "$pkg" >/dev/null 2>&1; then
+            brew install "$pkg"
+        else
+            echo -e "${GREEN}✅ $pkg already installed${NC}"
+        fi
+    done
 else
     sudo apt update
     for pkg in stow jq ranger; do
@@ -77,7 +84,11 @@ fi
 echo -e "${YELLOW}📦 Installing Node.js...${NC}"
 if ! command -v node >/dev/null 2>&1; then
     if [[ "$OS" == "macos" ]]; then
-        brew install node
+        if ! brew list node >/dev/null 2>&1; then
+            brew install node
+        else
+            echo -e "${GREEN}✅ Node.js already installed${NC}"
+        fi
     else
         sudo apt-get install -y ca-certificates curl gnupg
         sudo mkdir -p /etc/apt/keyrings
@@ -87,12 +98,18 @@ if ! command -v node >/dev/null 2>&1; then
         sudo apt-get update
         sudo apt-get install -y nodejs
     fi
+else
+    echo -e "${GREEN}✅ Node.js already installed${NC}"
 fi
 
 echo -e "${YELLOW}📝 Installing Neovim...${NC}"
 if ! command -v nvim >/dev/null 2>&1; then
     if [[ "$OS" == "macos" ]]; then
-        brew install neovim
+        if ! brew list neovim >/dev/null 2>&1; then
+            brew install neovim
+        else
+            echo -e "${GREEN}✅ Neovim already installed${NC}"
+        fi
     else
         if command -v apt >/dev/null 2>&1; then
             sudo apt install -y neovim 2>/dev/null || {
@@ -109,6 +126,8 @@ if ! command -v nvim >/dev/null 2>&1; then
             mv nvim.appimage ~/.local/bin/nvim
         fi
     fi
+else
+    echo -e "${GREEN}✅ Neovim already installed${NC}"
 fi
 
 # Install Python dependencies for Neovim
