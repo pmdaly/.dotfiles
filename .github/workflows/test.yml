@@ -18,12 +18,14 @@ jobs:
         run: |
           sh -c "$(curl -fsLS get.chezmoi.io)"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          # Verify chezmoi is installed and executable
+          ls -la $HOME/.local/bin/chezmoi
 
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
-          export PATH="$HOME/.local/bin:$PATH"
-          chezmoi --version
+          # Use full path to ensure chezmoi is found
+          $HOME/.local/bin/chezmoi --version
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
           [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
