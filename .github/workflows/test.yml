@@ -18,14 +18,25 @@ jobs:
         run: |
           sh -c "$(curl -fsLS get.chezmoi.io)"
           echo "$HOME/.local/bin" >> $GITHUB_PATH
-          # Verify chezmoi is installed and executable
-          ls -la $HOME/.local/bin/chezmoi
+          # Check where chezmoi was actually installed
+          echo "Checking chezmoi installation location..."
+          which chezmoi || echo "chezmoi not in PATH"
+          find $HOME -name "chezmoi" -type f 2>/dev/null || echo "chezmoi not found in $HOME"
+          find /tmp -name "chezmoi" -type f 2>/dev/null || echo "chezmoi not found in /tmp"
+          ls -la $HOME/.local/bin/ 2>/dev/null || echo "$HOME/.local/bin does not exist"
 
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
-          # Use full path to ensure chezmoi is found
-          $HOME/.local/bin/chezmoi --version
+          # Try to find chezmoi in common locations
+          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
+          if [[ -n "$CHEZMOI_PATH" ]]; then
+            echo "Found chezmoi at: $CHEZMOI_PATH"
+            $CHEZMOI_PATH --version
+          else
+            echo "❌ chezmoi not found"
+            exit 1
+          fi
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
           [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
@@ -41,12 +52,26 @@ jobs:
       - name: Test chezmoi apply
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          chezmoi apply --dry-run
+          # Find chezmoi dynamically
+          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
+          if [[ -n "$CHEZMOI_PATH" ]]; then
+            $CHEZMOI_PATH apply --dry-run
+          else
+            echo "❌ chezmoi not found"
+            exit 1
+          fi
 
       - name: Verify configuration
         run: |
           export PATH="$HOME/.local/bin:$PATH"
-          chezmoi verify
+          # Find chezmoi dynamically
+          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
+          if [[ -n "$CHEZMOI_PATH" ]]; then
+            $CHEZMOI_PATH verify
+          else
+            echo "❌ chezmoi not found"
+            exit 1
+          fi
 
   test-macos:
     runs-on: macos-latest

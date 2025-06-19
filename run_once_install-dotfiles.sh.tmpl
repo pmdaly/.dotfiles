@@ -44,10 +44,10 @@ fi
 # Install system packages
 echo -e "${YELLOW}📦 Installing system packages...${NC}"
 if [[ "$OS" == "macos" ]]; then
-    brew install stow jq ranger pipx
+    brew install stow jq ranger
 else
     sudo apt update
-    sudo apt install -y stow jq ranger python3-pipx
+    sudo apt install -y stow jq ranger
 fi
 
 # Install applications
@@ -123,21 +123,11 @@ fi
 # Install Python dependencies for Neovim
 echo -e "${YELLOW}🐍 Installing Python dependencies...${NC}"
 if command -v pip3 >/dev/null 2>&1; then
-    # Try pipx first (recommended for applications)
-    if command -v pipx >/dev/null 2>&1; then
-        pipx install pynvim
-    else
-        # Fallback to user installation
-        pip3 install --user pynvim
-    fi
+    # pynvim is a library, not an application, so use --user flag
+    pip3 install --user pynvim
 elif command -v pip >/dev/null 2>&1; then
-    # Try pipx first (recommended for applications)
-    if command -v pipx >/dev/null 2>&1; then
-        pipx install pynvim
-    else
-        # Fallback to user installation
-        pip install --user pynvim
-    fi
+    # pynvim is a library, not an application, so use --user flag
+    pip install --user pynvim
 fi
 
 echo -e "${GREEN}✅ Installation complete!${NC}"
