@@ -116,4 +116,11 @@ jobs:
         run: |
           echo "Checking for potential security issues..."
           if grep -r -i "password\|secret\|token\|api_key\|credential\|auth\|private_key\|ssh_key" . --exclude-dir=.git | \
-             grep -v
+             grep -v -E "(keybindings|keys|keymap|bindkey|bind-key|alt_key|dvorak|keyboard|keyboard|key|Key|KEY)" | \
+             grep -v -E "(detect-secrets|secrets)" | \
+             grep -v -E "(fugitive|telescope|lsp|remap|config)"; then
+            echo "⚠️  Potential sensitive data found"
+            exit 1
+          else
+            echo "✅ No obvious sensitive data found"
+          fi

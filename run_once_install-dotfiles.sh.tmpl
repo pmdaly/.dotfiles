@@ -111,11 +111,41 @@ if ! command -v nvim >/dev/null 2>&1; then
     fi
 fi
 
+# Install Python dependencies for Neovim
 echo -e "${YELLOW}🐍 Installing Python dependencies...${NC}"
-if command -v pip3 >/dev/null 2>&1; then
-    pip3 install --user pynvim
-elif command -v pip >/dev/null 2>&1; then
-    pip install --user pynvim
+if command -v python3 >/dev/null 2>&1; then
+    # Check if pynvim is already available
+    if python3 -c "import pynvim" 2>/dev/null; then
+        echo -e "${GREEN}✅ pynvim already available${NC}"
+    else
+        # Try different installation methods
+        if [[ "$OS" == "macos" ]]; then
+            # On macOS, try to install via Homebrew first
+            if command -v brew >/dev/null 2>&1; then
+                echo -e "${YELLOW}  Trying to install pynvim via Homebrew...${NC}"
+                brew install python-pynvim 2>/dev/null || {
+                    echo -e "${YELLOW}  Homebrew pynvim not available, trying pip with --break-system-packages...${NC}"
+                    pip3 install --break-system-packages pynvim 2>/dev/null || {
+                        echo -e "${YELLOW}  Creating virtual environment for pynvim...${NC}"
+                        python3 -m venv ~/.local/venv/pynvim
+                        ~/.local/venv/pynvim/bin/pip install pynvim
+                        echo -e "${YELLOW}  pynvim installed in virtual environment at ~/.local/venv/pynvim${NC}"
+                    }
+                }
+            fi
+        else
+            # On Linux, try --user first, then --break-system-packages
+            pip3 install --user pynvim 2>/dev/null || {
+                echo -e "${YELLOW}  Trying with --break-system-packages...${NC}"
+                pip3 install --break-system-packages pynvim 2>/dev/null || {
+                    echo -e "${YELLOW}  Creating virtual environment for pynvim...${NC}"
+                    python3 -m venv ~/.local/venv/pynvim
+                    ~/.local/venv/pynvim/bin/pip install pynvim
+                    echo -e "${YELLOW}  pynvim installed in virtual environment at ~/.local/venv/pynvim${NC}"
+                }
+            }
+        fi
+    fi
 fi
 
 echo -e "${GREEN}✅ Installation complete!${NC}"
