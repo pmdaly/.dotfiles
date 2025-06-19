@@ -22,6 +22,7 @@ jobs:
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
+          export PATH="$HOME/.local/bin:$PATH"
           chezmoi --version
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
@@ -58,15 +59,18 @@ jobs:
 
       - name: Install dependencies
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           brew install stow jq ranger python node
 
       - name: Install chezmoi
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           brew install chezmoi
 
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
+          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi --version
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
@@ -76,15 +80,18 @@ jobs:
 
       - name: Test migration script on macOS
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           bash -n migrate-to-chezmoi.sh
           bash migrate-to-chezmoi.sh
 
       - name: Test chezmoi apply on macOS
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi apply --dry-run
 
       - name: Verify configuration on macOS
         run: |
+          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi verify
 
   lint:

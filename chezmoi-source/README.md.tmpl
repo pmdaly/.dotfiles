@@ -1,4 +1,4 @@
-# {{ .name }}'s Dotfiles
+# {{ .chezmoi.username }}'s Dotfiles
 
 Managed with [chezmoi](https://www.chezmoi.io/).
 
@@ -8,10 +8,10 @@ Managed with [chezmoi](https://www.chezmoi.io/).
 
 ```bash
 # Install chezmoi
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply {{ .repo }}
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply {{ .chezmoi.sourceDir }}
 
 # Or if you have chezmoi installed
-chezmoi init --apply {{ .repo }}
+chezmoi init --apply {{ .chezmoi.sourceDir }}
 ```
 
 ### Manual installation
@@ -25,7 +25,7 @@ else
 fi
 
 # Initialize dotfiles
-chezmoi init {{ .repo }}
+chezmoi init {{ .chezmoi.sourceDir }}
 chezmoi apply
 ```
 
