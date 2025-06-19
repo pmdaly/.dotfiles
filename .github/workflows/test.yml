@@ -12,31 +12,24 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl git zsh stow jq ranger python3 python3-pip nodejs npm ca-certificates gnupg lsb-release
+          sudo apt-get install -y curl git zsh stow jq ranger python3 python3-pip ca-certificates gnupg lsb-release
+          # Install newer Node.js (optional)
+          curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+          sudo apt-get install -y nodejs
 
       - name: Install chezmoi
         run: |
-          sh -c "$(curl -fsLS get.chezmoi.io)"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-          # Check where chezmoi was actually installed
-          echo "Checking chezmoi installation location..."
-          which chezmoi || echo "chezmoi not in PATH"
-          find $HOME -name "chezmoi" -type f 2>/dev/null || echo "chezmoi not found in $HOME"
-          find /tmp -name "chezmoi" -type f 2>/dev/null || echo "chezmoi not found in /tmp"
-          ls -la $HOME/.local/bin/ 2>/dev/null || echo "$HOME/.local/bin does not exist"
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+
+      - name: Add chezmoi to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
-          # Try to find chezmoi in common locations
-          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
-          if [[ -n "$CHEZMOI_PATH" ]]; then
-            echo "Found chezmoi at: $CHEZMOI_PATH"
-            $CHEZMOI_PATH --version
-          else
-            echo "❌ chezmoi not found"
-            exit 1
-          fi
+          command -v chezmoi || { echo "❌ chezmoi not found"; exit 1; }
+          chezmoi --version
+
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
           [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
@@ -45,33 +38,16 @@ jobs:
 
       - name: Test migration script
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
           bash -n migrate-to-chezmoi.sh
           bash migrate-to-chezmoi.sh
 
       - name: Test chezmoi apply
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          # Find chezmoi dynamically
-          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
-          if [[ -n "$CHEZMOI_PATH" ]]; then
-            $CHEZMOI_PATH apply --dry-run
-          else
-            echo "❌ chezmoi not found"
-            exit 1
-          fi
+          chezmoi apply --dry-run
 
       - name: Verify configuration
         run: |
-          export PATH="$HOME/.local/bin:$PATH"
-          # Find chezmoi dynamically
-          CHEZMOI_PATH=$(which chezmoi 2>/dev/null || find $HOME -name "chezmoi" -type f 2>/dev/null | head -1 || echo "")
-          if [[ -n "$CHEZMOI_PATH" ]]; then
-            $CHEZMOI_PATH verify
-          else
-            echo "❌ chezmoi not found"
-            exit 1
-          fi
+          chezmoi verify
 
   test-macos:
     runs-on: macos-latest
@@ -79,25 +55,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install Homebrew
-        run: |
-          /bin/bash -c "$(curl -fsSL --tlsv1.2 --proto =https https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          echo "/opt/homebrew/bin" >> $GITHUB_PATH
+      - name: Add Homebrew to PATH
+        run: echo "/opt/homebrew/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
           brew install stow jq ranger python node
 
       - name: Install chezmoi
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
           brew install chezmoi
 
       - name: Validate setup
         run: |
           echo "✅ Checking chezmoi installation..."
-          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi --version
           echo "✅ Checking required files..."
           [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
@@ -107,18 +78,15 @@ jobs:
 
       - name: Test migration script on macOS
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
           bash -n migrate-to-chezmoi.sh
           bash migrate-to-chezmoi.sh
 
       - name: Test chezmoi apply on macOS
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi apply --dry-run
 
       - name: Verify configuration on macOS
         run: |
-          export PATH="/opt/homebrew/bin:$PATH"
           chezmoi verify
 
   lint:
@@ -147,9 +115,5 @@ jobs:
       - name: Check for security issues
         run: |
           echo "Checking for potential security issues..."
-          if grep -r -i "password\|secret\|token\|api_key\|credential\|auth\|private_key\|ssh_key" . --exclude-dir=.git | grep -v -E "(keybindings|keys|keymap|bindkey|bind-key|alt_key|dvorak|keyboard|keyboard|key|Key|KEY)" | grep -v -E "(detect-secrets|secrets)" | grep -v -E "(fugitive|telescope|lsp|remap|config)"; then
-            echo "⚠️  Potential sensitive data found"
-            exit 1
-          else
-            echo "✅ No obvious sensitive data found"
-          fi 
+          if grep -r -i "password\|secret\|token\|api_key\|credential\|auth\|private_key\|ssh_key" . --exclude-dir=.git | \
+             grep -v
