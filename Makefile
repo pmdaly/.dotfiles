@@ -1,4 +1,4 @@
-.PHONY: install uninstall test help
+.PHONY: install uninstall test help apply diff edit
 
 configs=\
 	kitty\
@@ -14,6 +14,9 @@ pkgs=\
 # Help target
 help:
 	@echo "Available commands:"
+	@echo "  apply         - Apply dotfiles using chezmoi (recommended)"
+	@echo "  diff          - Show what would change"
+	@echo "  edit          - Edit a dotfile"
 	@echo "  install       - Install dotfiles using stow (legacy)"
 	@echo "  uninstall     - Uninstall dotfiles using stow (legacy)"
 	@echo "  update        - Update system packages"
@@ -23,6 +26,17 @@ help:
 	@echo "  - Real Linux environment testing"
 	@echo "  - Real macOS environment testing"
 	@echo "  - Automatic testing on push/PR"
+
+# Chezmoi commands (recommended)
+apply:
+	chezmoi apply
+
+diff:
+	chezmoi diff
+
+edit:
+	@echo "Usage: make edit FILE=~/.zshrc"
+	@if [ -n "$(FILE)" ]; then chezmoi edit $(FILE); else echo "Please specify FILE=path"; fi
 
 update:
 	sudo apt update
@@ -57,8 +71,8 @@ test:
 	@echo "✅ Checking chezmoi installation..."
 	@chezmoi --version
 	@echo "✅ Checking required files..."
-	@[[ -f "migrate-to-chezmoi.sh" ]] || (echo "❌ migrate-to-chezmoi.sh not found" && exit 1)
-	@[[ -f "run_once_install-dotfiles.sh.tmpl" ]] || (echo "❌ run_once_install-dotfiles.sh.tmpl not found" && exit 1)
+	@[[ -f "scripts/migrate-to-chezmoi.sh" ]] || (echo "❌ scripts/migrate-to-chezmoi.sh not found" && exit 1)
+	@[[ -f "scripts/run_once_install-dotfiles.sh.tmpl" ]] || (echo "❌ scripts/run_once_install-dotfiles.sh.tmpl not found" && exit 1)
 	@[[ -d "chezmoi-source" ]] || (echo "❌ chezmoi-source directory not found" && exit 1)
 	@[[ -f "chezmoi.toml" ]] || (echo "❌ chezmoi.toml not found" && exit 1)
 	@echo "✅ Local tests completed"

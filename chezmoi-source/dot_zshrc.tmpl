@@ -5,6 +5,11 @@ export PATH="$HOME/.local/bin:$PATH"
 # need this for some stuff below
 autoload -Uz compinit && compinit
 
+# chezmoi completion
+if command -v chezmoi >/dev/null 2>&1; then
+  eval "$(chezmoi completion zsh)"
+fi
+
 # Set up the prompt
 function git_branch_name()
 {

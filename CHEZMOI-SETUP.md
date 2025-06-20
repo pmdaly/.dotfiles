@@ -5,7 +5,7 @@
 Run the migration script to automatically transition from stow to chezmoi:
 
 ```bash
-./migrate-to-chezmoi.sh
+./scripts/migrate-to-chezmoi.sh
 ```
 
 ## 📋 What's Changed
@@ -28,8 +28,6 @@ Run the migration script to automatically transition from stow to chezmoi:
 
 ```
 chezmoi-source/
-├── chezmoi.toml                    # Configuration
-├── run_once_install-dotfiles.sh.tmpl  # One-time setup
 ├── dot_zshrc.tmpl                 # Zsh config template
 ├── dot_config/
 │   ├── nvim/                      # Neovim config
@@ -37,6 +35,12 @@ chezmoi-source/
 │   └── ranger/                    # Ranger config
 ├── dot_tmux.conf.tmpl             # Tmux config
 └── README.md.tmpl                 # Documentation
+
+scripts/
+├── migrate-to-chezmoi.sh          # Migration script
+└── run_once_install-dotfiles.sh.tmpl  # One-time setup
+
+chezmoi.toml                       # Configuration
 ```
 
 ## 🔧 Key Features
