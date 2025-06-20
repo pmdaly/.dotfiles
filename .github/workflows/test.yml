@@ -60,7 +60,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install stow jq ranger python node
+          # Check and install packages only if not already installed
+          for pkg in stow jq ranger python node; do
+            if ! brew list "$pkg" >/dev/null 2>&1; then
+              brew install "$pkg"
+            else
+              echo "✅ $pkg already installed"
+            fi
+          done
 
       - name: Install chezmoi
         run: |
