@@ -31,15 +31,15 @@ jobs:
           chezmoi --version
 
           echo "✅ Checking required files..."
-          [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
-          [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
+          [[ -f "scripts/migrate-to-chezmoi.sh" ]] || exit 1
+          [[ -f "scripts/run_once_install-dotfiles.sh.tmpl" ]] || exit 1
           [[ -d "chezmoi-source" ]] || exit 1
           [[ -f "chezmoi.toml" ]] || exit 1
 
       - name: Test migration script
         run: |
-          bash -n migrate-to-chezmoi.sh
-          bash migrate-to-chezmoi.sh
+          bash -n scripts/migrate-to-chezmoi.sh
+          bash scripts/migrate-to-chezmoi.sh
 
       - name: Test chezmoi apply
         run: |
@@ -78,15 +78,15 @@ jobs:
           echo "✅ Checking chezmoi installation..."
           chezmoi --version
           echo "✅ Checking required files..."
-          [[ -f "migrate-to-chezmoi.sh" ]] || exit 1
-          [[ -f "run_once_install-dotfiles.sh.tmpl" ]] || exit 1
+          [[ -f "scripts/migrate-to-chezmoi.sh" ]] || exit 1
+          [[ -f "scripts/run_once_install-dotfiles.sh.tmpl" ]] || exit 1
           [[ -d "chezmoi-source" ]] || exit 1
           [[ -f "chezmoi.toml" ]] || exit 1
 
       - name: Test migration script on macOS
         run: |
-          bash -n migrate-to-chezmoi.sh
-          bash migrate-to-chezmoi.sh
+          bash -n scripts/migrate-to-chezmoi.sh
+          bash scripts/migrate-to-chezmoi.sh
 
       - name: Test chezmoi apply on macOS
         run: |
@@ -104,8 +104,8 @@ jobs:
 
       - name: Check shell script syntax
         run: |
-          bash -n migrate-to-chezmoi.sh
-          bash -n run_once_install-dotfiles.sh.tmpl
+          bash -n scripts/migrate-to-chezmoi.sh
+          bash -n scripts/run_once_install-dotfiles.sh.tmpl
 
       - name: Check for template syntax
         run: |
